@@ -14,22 +14,24 @@ def make_prediction(model, input_data):
     prediction = model.predict(input_data)
     return prediction
 
+df = pd.read_csv('./Data/Entities.csv')
+location_frequency_map = df['location'].value_counts(normalize=True)
+category_mapping = {'Room': 0, 'Lower Portion': 1, 'Upper Portion': 2, 'Flat': 3, 'House': 4, 'Penthouse': 5, 'Farm House': 6}
+unique_property_types = df['property_type'].unique()
+unique_locations = df['location'].unique()
+unique_cities = df['city'].unique()
+unique_purpose = df['purpose'].unique()
+
+# Load the pickled model
+model_path = 'predictive_model.pkl'
+model = load_model(model_path)
+
 def main():
     st.title("House Price Prediction Model")
     st.subheader("Enter house details for prediction")
 
     # Load data for normalization and mapping
-    df = pd.read_csv('./Data/Entities.csv')
-    location_frequency_map = df['location'].value_counts(normalize=True)
-    category_mapping = {'Room': 0, 'Lower Portion': 1, 'Upper Portion': 2, 'Flat': 3, 'House': 4, 'Penthouse': 5, 'Farm House': 6}
-    unique_property_types = df['property_type'].unique()
-    unique_locations = df['location'].unique()
-    unique_cities = df['city'].unique()
-    unique_purpose = df['purpose'].unique()
-
-    # Load the pickled model
-    model_path = 'predictive_model.pkl'
-    model = load_model(model_path)
+    
     
     property_type = st.selectbox("Property Type", options=unique_property_types)
     city = st.selectbox("City", unique_cities)
